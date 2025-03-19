@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Create Employee";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form id="createEmployeeForm">
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <input type="text" id="Name" name="Name" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Designation">Designation:</label>
+        <input type="text" id="Designation" name="Designation" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Department">Department:</label>
+        <input type="text" id="Department" name="Department" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="JoiningDate">Joining Date:</label>
+        <input type="date" id="JoiningDate" name="JoiningDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Create Employee</button>
+</form>
+
+<div id="responseMessage" style="margin-top: 10px;"></div>
+
+<script>
+    // Handle form submission
+    document.getElementById("createEmployeeForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent the default form submission behavior
+
+        const employeeData = {
+            name: document.getElementById("Name").value,
+            designation: document.getElementById("Designation").value,
+            department: document.getElementById("Department").value,
+            joining_date: document.getElementById("JoiningDate").value
+        };
+
+        const jwtToken = localStorage.getItem('token');  
+
+        fetch('https://localhost:7259/Employee/AddEmployee', {  
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(employeeData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                document.getElementById("responseMessage").innerHTML = "<div class='alert alert-success'>Employee created successfully!</div>";
+                // Optionally clear form after submission
+                document.getElementById("createEmployeeForm").reset();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById("responseMessage").innerHTML = "<div class='alert alert-danger'>Error creating employee.</div>";
+        });
+    });
+</script>

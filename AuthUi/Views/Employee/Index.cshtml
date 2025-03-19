@@ -1,0 +1,64 @@
+﻿
+
+<h2>Employee Details</h2>
+<a href="Employee/AddEmployee">AddEmployee</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>Joining Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="EmployeeTable"></tbody>
+</table>
+
+<script>
+    FetchEmployeeData();
+
+    function FetchEmployeeData() {
+        const jwtToken = localStorage.getItem('token');  // Replace with your actual JWT token
+
+        fetch('https://localhost:7259/Employee/AllEmployees', {  // Correct API endpoint with "api/"
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const table = document.getElementById('EmployeeTable');
+            table.innerHTML = ''; // Clear existing table rows
+
+            // Create an array of table rows
+            const rows = data.map(employee => {
+                const formattedDate = new Date(employee.joining_date).toLocaleDateString(); // Format date here
+                const editUrl = `/Employee/AddEmployee/${employee.id}`;  // Construct the Edit URL dynamically
+
+                return `<tr>
+                    <td>${employee.name}</td>
+                    <td>${employee.designation}</td>
+                    <td>${employee.department}</td>
+                    <td>${formattedDate}</td>  <!-- Format date as needed -->
+                    <td>
+                        <a href="${editUrl}">Edit</a>
+                    </td>
+                </tr>`;
+            });
+
+            // Join all rows and insert them into the table
+            table.innerHTML = rows.join('');
+        })
+        .catch(error => console.error('Error fetching employee data:', error));
+    }
+
+    
+</script>
