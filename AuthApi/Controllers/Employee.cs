@@ -1,7 +1,7 @@
 ﻿using AuthApi.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Linq; 
 using Microsoft.AspNetCore.Authorization;
 
 namespace AuthApi.Controllers
@@ -31,7 +31,7 @@ namespace AuthApi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddEmployee([FromBody] Models.Employee employee)
+        public async Task<IActionResult> AddEmployee([FromBody] Models  .Employee employee)
         {
             if (employee == null)
             {
@@ -76,7 +76,9 @@ namespace AuthApi.Controllers
             existingEmployee.Joining_date = employee.Joining_date;
 
             _context.SaveChanges();
-            return Ok(existingEmployee); 
+           // return Ok(existingEmployee);
+            return Ok(new { success = true, message = "Employee updated successfully", employee = existingEmployee });
+
         }
 
         [HttpDelete]
@@ -95,7 +97,9 @@ namespace AuthApi.Controllers
 
             _context.Employees.Remove(existingEmployee);
             _context.SaveChanges();
-            return Ok(existingEmployee); 
+            //return Ok(existingEmployee); 
+            return Ok(new { success = true, message = "Employee Deleted successfully" });
+
         }
     }
 }

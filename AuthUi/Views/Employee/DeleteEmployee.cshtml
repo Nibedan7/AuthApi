@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Delete Employee";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form id="deleteEmployeeForm">
+    <div class="form-group">
+        <label for="Name">Full Name:</label>
+        <input type="text" id="Name" name="Name" class="form-control" disabled required value="@Model.Name" />
+    </div>
+    <div class="form-group">
+        <label for="Designation">Designation:</label>
+        <input type="text" id="Designation" name="Designation" class="form-control" disabled required value="@Model.Designation" />
+    </div>
+    <div class="form-group">
+        <label for="Department">Department:</label>
+        <input type="text" id="Department" name="Department" class="form-control" disabled required value="@Model.Department" />
+    </div>
+    <div class="form-group">
+        <label for="JoiningDate">Joining Date:</label>
+        <input type="date" id="JoiningDate" name="JoiningDate" class="form-control" disabled required value="@Model.Joining_date.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit" class="btn btn-danger">Delete Employee</button>
+</form>
+
+<div id="responseMessage" style="margin-top: 10px;"></div>
+
+<script>
+    const jwtToken = localStorage.getItem('token');
+
+        console.log(jwtToken);
+
+    document.getElementById("deleteEmployeeForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent the default form submission behavior
+
+        // Get the employee data from the form
+        const employeeData = {
+            id: '@Model.Id',
+            name: document.getElementById("Name").value,
+            designation: document.getElementById("Designation").value,
+            department: document.getElementById("Department").value,
+            joining_date: document.getElementById("JoiningDate").value
+        };
+
+
+
+        const jwtToken = localStorage.getItem('token');
+
+        console.log(jwtToken);
+
+
+        if (!jwtToken) {
+            document.getElementById("responseMessage").innerHTML = "<div class='alert alert-danger'>JWT token not found!</div>";
+            return;
+        }
+
+
+        fetch(`https://localhost:7259/Employee/DeleteEmployee`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(employeeData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                    document.getElementById("responseMessage").innerHTML = "<div class='alert alert-success'>" + data.message + "</div>";
+                    setTimeout(function(){
+                       window.location.href = "/Employee/Index";
+                   });
+            }else {
+                    document.getElementById("responseMessage").innerHTML = "<div class='alert alert-danger'>" + data.message + "</div>";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById("responseMessage").innerHTML = "<div class='alert alert-danger'>Error deleting employee.</div>";
+        });
+    });
+</script>

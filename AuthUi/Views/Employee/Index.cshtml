@@ -1,64 +1,92 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
 
-<h2>Employee Details</h2>
-<a href="Employee/AddEmployee">AddEmployee</a>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Joining Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="EmployeeTable"></tbody>
-</table>
+        .btn-action {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mb-4">Employee Details</h2>
+        <a href="Employee/AddEmployee" class="btn btn-success mb-3">Add Employee</a>
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th>Joining Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="EmployeeTable"></tbody>
+        </table>
+    </div>
 
-<script>
-    FetchEmployeeData();
+    <!-- Bootstrap JS & jQuery (Required for Bootstrap Modal) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    function FetchEmployeeData() {
-        const jwtToken = localStorage.getItem('token');  // Replace with your actual JWT token
+    <script>
+        // Fetch employee data when page loads
+        FetchEmployeeData();
 
-        fetch('https://localhost:7259/Employee/AllEmployees', {  // Correct API endpoint with "api/"
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${jwtToken}`,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const table = document.getElementById('EmployeeTable');
-            table.innerHTML = ''; // Clear existing table rows
+        function FetchEmployeeData() {
+            const jwtToken = localStorage.getItem('token');
 
-            // Create an array of table rows
-            const rows = data.map(employee => {
-                const formattedDate = new Date(employee.joining_date).toLocaleDateString(); // Format date here
-                const editUrl = `/Employee/AddEmployee/${employee.id}`;  // Construct the Edit URL dynamically
+            fetch('https://localhost:7259/Employee/AllEmployees', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const table = document.getElementById('EmployeeTable');
+                table.innerHTML = '';
 
-                return `<tr>
-                    <td>${employee.name}</td>
-                    <td>${employee.designation}</td>
-                    <td>${employee.department}</td>
-                    <td>${formattedDate}</td>  <!-- Format date as needed -->
-                    <td>
-                        <a href="${editUrl}">Edit</a>
-                    </td>
-                </tr>`;
-            });
+                const rows = data.map(employee => {
+                    const formattedDate = new Date(employee.joining_date).toLocaleDateString();
+                    const editUrl = `/Employee/EditEmployee/${employee.id}`;
+                    const deleteUrl = `/Employee/DeleteEmployee/${employee.id}`;
 
-            // Join all rows and insert them into the table
-            table.innerHTML = rows.join('');
-        })
-        .catch(error => console.error('Error fetching employee data:', error));
-    }
+                    return `
+                        <tr>
+                            <td>${employee.name}</td>
+                            <td>${employee.designation}</td>
+                            <td>${employee.department}</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <a href="${editUrl}" class="btn btn-warning btn-sm btn-action">Edit</a>
+                                 <a href="${deleteUrl}" class="btn btn-warning btn-sm btn-action">Delete</a>
 
-    
-</script>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                table.innerHTML = rows.join('');
+            })
+            .catch(error => console.error('Error fetching employee data:', error));
+        }
+
+    </script>
+</body>
+</html>
