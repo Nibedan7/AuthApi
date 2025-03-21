@@ -1,0 +1,58 @@
+﻿@model Employee
+
+<form method="post">
+    <div class="container mt-5">
+        <div class="border p-4 rounded shadow-sm bg-white">
+            <h3 class="text-center text-primary mb-4">Create New Employee</h3>
+
+            <!-- Name Field -->
+            <div class="mb-4">
+                <label asp-for="Name" class="form-label">Full Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter employee's full name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <!-- Designation Field -->
+            <div class="mb-4">
+                <label asp-for="Designation" class="form-label">Designation</label>
+                <input asp-for="Designation" class="form-control" placeholder="Enter employee's designation" />
+                <span asp-validation-for="Designation" class="text-danger"></span>
+            </div>
+
+            <!-- Department Field -->
+            <div class="mb-4">
+                <label asp-for="Department" class="form-label">Department</label>
+                <input asp-for="Department" class="form-control" placeholder="Enter employee's department" />
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+
+            <!-- Joining Date Field -->
+            <div class="mb-4">
+                <label asp-for="Joining_date" class="form-label">Joining Date</label>
+                <input asp-for="Joining_date" type="date" class="form-control" />
+                <span asp-validation-for="Joining_date" class="text-danger"></span>
+            </div>
+
+            <!-- Button Section -->
+            <div class="row">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-person-plus-fill"></i> Create Employee
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <a asp-controller="Emp" asp-action="Index" class="btn btn-outline-secondary w-100 py-2">
+                        <i class="bi bi-arrow-left-circle"></i> Back to Employee List
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

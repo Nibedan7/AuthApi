@@ -1,0 +1,52 @@
+﻿@model Employee
+
+<form method="post" asp-action="Delete" asp-route-id="@Model.Id">
+    <div class="container mt-5">
+        <div class="border p-4 rounded shadow-sm bg-light">
+            <h3 class="text-center text-primary mb-4">Employee Details</h3>
+
+            <!-- Name Field -->
+            <div class="mb-4">
+                <label asp-for="Name" class="form-label">Full Name</label>
+                <input asp-for="Name" class="form-control" disabled placeholder="Employee name" />
+            </div>
+
+            <!-- Designation Field -->
+            <div class="mb-4">
+                <label asp-for="Designation" class="form-label">Designation</label>
+                <input asp-for="Designation" class="form-control" disabled placeholder="Employee designation" />
+            </div>
+
+            <!-- Department Field -->
+            <div class="mb-4">
+                <label asp-for="Department" class="form-label">Department</label>
+                <input asp-for="Department" class="form-control" disabled placeholder="Employee department" />
+            </div>
+
+            <!-- Joining Date Field -->
+            <div class="mb-4">
+                <label asp-for="Joining_date" class="form-label">Joining Date</label>
+                <input asp-for="Joining_date" class="form-control" disabled placeholder="Employee joining date" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <button type="submit" class="btn btn-danger w-100 py-2">
+                        <i class="bi bi-trash-fill"></i> Delete Employee
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <a asp-controller="Emp" asp-action="Index" class="btn btn-outline-secondary w-100 py-2">
+                        <i class="bi bi-arrow-left-circle"></i> Back to Employee List
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

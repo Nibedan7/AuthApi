@@ -8,7 +8,7 @@ namespace AuthApi.Controllers
 {
     [Route("[controller]/[Action]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,12 +22,15 @@ namespace AuthApi.Controllers
         public IActionResult AllEmployees()
         {
             var employees = _context.Employees.ToList();
-            if (employees == null || !employees.Any()) 
+
+            if (!employees.Any())
             {
                 return NotFound("No employees found");
             }
+
             return Ok(employees);
         }
+
 
 
         [HttpPost]
@@ -81,15 +84,28 @@ namespace AuthApi.Controllers
 
         }
 
-        [HttpDelete]
-        public IActionResult DeleteEmployee([FromBody] Models.Employee employee)
+        [HttpGet("{id}")]
+        public IActionResult GetEmployeeById(int id)
         {
+            var employee = _context.Employees.Find(id);
             if (employee == null)
             {
-                return BadRequest("Invalid Employee details");
+                return NotFound("Employee not found");
             }
 
-            var existingEmployee = _context.Employees.Find(employee.Id);
+            return Ok(employee);
+        }
+
+
+        [HttpDelete("{employeeId}")]
+        public IActionResult DeleteEmployee(int employeeId)
+        {
+            if (employeeId <= 0)
+            {
+                return BadRequest("Invalid Employee ID");
+            }
+
+            var existingEmployee = _context.Employees.Find(employeeId);
             if (existingEmployee == null)
             {
                 return NotFound("Employee not found");
@@ -97,9 +113,8 @@ namespace AuthApi.Controllers
 
             _context.Employees.Remove(existingEmployee);
             _context.SaveChanges();
-            //return Ok(existingEmployee); 
             return Ok(new { success = true, message = "Employee Deleted successfully" });
-
         }
+
     }
 }
